@@ -12,7 +12,7 @@ export default function Root() {
         deleteCookie('token');
         navigate('/auth?mode=signin');
       }
-    }, parseInt(process.env.TOKEN_EXPIRATION_TIME || '', 10));
+    }, parseInt(process.env.TOKEN_EXPIRATION_TIME || ''));
   }, []);
 
   return (

@@ -3,24 +3,29 @@ import bcrypt from 'bcryptjs';
 export const setTokenCookie = ({
   name = 'token',
   token,
-  expirationDays,
+  expirationTime,
 }: {
   name?: string;
   token: string;
-  expirationDays: number;
+  expirationTime: number;
 }) => {
   const date = new Date();
-  date.setTime(date.getTime() + expirationDays * 24 * 60 * 60 * 1000);
+  date.setTime(date.getTime() + expirationTime);
   const expires = `expires=${date.toUTCString()}`;
   document.cookie = `${name}=${token}; ${expires}; path=/`;
 };
 
 export const getCookie = (name: string): string | null => {
-  const [key, token] = document.cookie.split('=');
-  if (key !== name) {
-    return null;
+  const cookies = document.cookie.split(';');
+
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(name + '=')) {
+      return cookie.substring(name.length + 1);
+    }
   }
-  return token;
+
+  return null;
 };
 
 export const deleteCookie = (cookieName: string) => {

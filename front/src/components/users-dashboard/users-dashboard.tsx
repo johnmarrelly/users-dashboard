@@ -40,10 +40,7 @@ export default function UsersDashboard() {
 
     fetchData();
 
-    const interval = setInterval(
-      fetchData,
-      parseInt(process.env.REACT_APP_REFRESH_TIME || '', 10)
-    );
+    const interval = setInterval(fetchData, 5000);
 
     return () => {
       clearInterval(interval);

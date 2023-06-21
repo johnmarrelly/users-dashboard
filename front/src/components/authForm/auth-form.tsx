@@ -80,7 +80,7 @@ export default function AuthForm() {
         setTokenCookie({
           name: 'token',
           token: response.data.accessToken,
-          expirationDays: 15 * 60 * 1000,
+          expirationTime: 600000,
         });
         navigate('/users-dashboard');
       }
