@@ -5,7 +5,6 @@ import { useApiHttp } from 'hooks/use-api-http';
 export const Header = () => {
   const { sendRequest, error, isLoading } = useApiHttp();
   const hasToken = getCookie('token');
-  console.log({ hasToken });
   const onLogOut = () => {
     sendRequest({
       endPoint: '/auth/signout',

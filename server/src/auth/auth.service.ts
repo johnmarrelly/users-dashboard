@@ -95,7 +95,6 @@ export class AuthService {
 
   async logOut(req: any): Promise<void> {
     const [type, token] = req.headers.authorization.split(' ');
-    // console.log(token);
 
     if (!token && type !== 'Bearer') {
       throw new UnauthorizedException();
