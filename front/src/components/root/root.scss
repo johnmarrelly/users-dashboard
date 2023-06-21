@@ -1,0 +1,27 @@
+.header {
+  grid-area: header;
+  background-color: rgb(206, 206, 241);
+}
+.main {
+  grid-area: main;
+}
+.footer {
+  grid-area: footer;
+  background-color: rgb(206, 206, 241);
+}
+
+.root-container {
+  display: grid;
+  grid-template-areas:
+    'header header header header header header'
+    '. main main main main .'
+    'footer footer footer footer footer footer';
+  grid-template-rows: 80px auto 80px;
+  height: 100vh;
+}
+
+.root-container {
+  .main {
+    // text-align: center;
+  }
+}
