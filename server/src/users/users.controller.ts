@@ -29,7 +29,12 @@ export class UsersController {
 
   @Get('/logged-in')
   async fetchLoggedInUsers(): Promise<User[]> {
-    return await this.usersService.getLoggedInUsers();
+    const loggedInUsers = await this.usersService.getLoggedInUsers();
+    const transformedUsers = loggedInUsers.map((user: any) => {
+      const { password, _id, __v, ...rest } = user.toObject();
+      return rest;
+    });
+    return transformedUsers;
   }
 
   @Get('/:id')

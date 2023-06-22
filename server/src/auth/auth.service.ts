@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -12,7 +11,6 @@ import { Request } from 'express';
 import { UserLoginsService } from 'src/user-logins/user-logins.service';
 import { AuthCredentialsLoginDto } from './dto/auth-cradential-login.dto';
 import { WhitelistTokensService } from 'src/whitelist-tokens/whitelist-tokens.service';
-import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +35,9 @@ export class AuthService {
     email: string;
   }): Promise<{ accessToken: string; refreshToken: string }> {
     return {
-      accessToken: await this.jwtService.sign(payload),
+      accessToken: await this.jwtService.sign(payload, {
+        expiresIn: process.env.JWT_TOKEN_EXPIRATION_TIME,
+      }),
       refreshToken: await this.jwtService.sign(payload, {
         expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
       }),

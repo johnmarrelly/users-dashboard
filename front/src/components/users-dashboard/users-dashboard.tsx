@@ -27,7 +27,7 @@ export default function UsersDashboard() {
   };
 
   useEffect(() => {
-    const endPoint = '/users';
+    const endPoint = '/users/logged-in';
     const method = 'GET';
 
     const fetchData = () => {

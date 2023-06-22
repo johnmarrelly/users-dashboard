@@ -6,14 +6,27 @@ import { Header } from 'components/header/header';
 
 export default function Root() {
   const navigate = useNavigate();
+
   useEffect(() => {
-    setTimeout(() => {
+    const tokenExpirationTime = parseInt(
+      process.env.TOKEN_EXPIRATION_TIME || ''
+    );
+    if (isNaN(tokenExpirationTime) || tokenExpirationTime <= 0) {
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
       if (getCookie('token')) {
+        console.log('inside settimeout');
         deleteCookie('token');
         navigate('/auth?mode=signin');
       }
-    }, parseInt(process.env.TOKEN_EXPIRATION_TIME || ''));
-  }, []);
+    }, tokenExpirationTime);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [process.env.TOKEN_EXPIRATION_TIME, navigate]);
 
   return (
     <div className='root-container'>
