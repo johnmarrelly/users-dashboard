@@ -13,6 +13,11 @@ import {
   UserLoginsSchema,
 } from 'src/user-logins/user-logins.schema';
 import { User, UserSchema } from 'src/users/users.schema';
+import { WhitelistTokensService } from 'src/whitelist-tokens/whitelist-tokens.service';
+import {
+  WhitelistTokens,
+  WhitelistTokensSchema,
+} from 'src/whitelist-tokens/whitelist-tokens-schema';
 
 @Module({
   imports: [
@@ -21,6 +26,9 @@ import { User, UserSchema } from 'src/users/users.schema';
       { name: UserLogins.name, schema: UserLoginsSchema },
     ]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: WhitelistTokens.name, schema: WhitelistTokensSchema },
+    ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -35,7 +43,17 @@ import { User, UserSchema } from 'src/users/users.schema';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, UserLoginsService],
-  exports: [JwtStrategy, PassportModule, UserLoginsService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    UserLoginsService,
+    WhitelistTokensService,
+  ],
+  exports: [
+    JwtStrategy,
+    PassportModule,
+    UserLoginsService,
+    WhitelistTokensService,
+  ],
 })
 export class AuthModule {}

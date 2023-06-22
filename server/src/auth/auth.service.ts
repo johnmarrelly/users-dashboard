@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -7,11 +8,11 @@ import { UsersService } from 'src/users/users.service';
 import { ErrorCodes, User } from 'src/users/users.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { NoContentException } from 'src/shared/exceptions/no-content.exception';
-import { GetBlackListedTokenDto } from './dto/get-blackListed-token.dto';
 import { Request } from 'express';
 import { UserLoginsService } from 'src/user-logins/user-logins.service';
 import { AuthCredentialsLoginDto } from './dto/auth-cradential-login.dto';
+import { WhitelistTokensService } from 'src/whitelist-tokens/whitelist-tokens.service';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
     private userService: UsersService,
     private userLoginsService: UserLoginsService,
     private jwtService: JwtService,
+    private whitelistTokensService: WhitelistTokensService,
   ) {}
 
   async validateUser(
@@ -90,30 +92,17 @@ export class AuthService {
       req as any,
     );
 
+    await this.whitelistTokensService.createWhiteListToken({
+      token: accessToken,
+      userId: user.id,
+    });
+
     return { userId: id, accessToken, refreshToken };
   }
 
-  async logOut(req: any): Promise<void> {
-    const [type, token] = req.headers.authorization.split(' ');
+  async logOut(req: Request): Promise<void> {
+    const [type, token] = req?.headers?.authorization.split(' ');
 
-    if (!token && type !== 'Bearer') {
-      throw new UnauthorizedException();
-    }
-
-    let decodedJwt;
-
-    try {
-      decodedJwt = this.jwtService.verify(token);
-    } catch (err) {
-      throw new UnauthorizedException();
-    }
-
-    const user: User = await this.userService.getUserById(decodedJwt.userId);
-
-    if (!user) {
-      throw new NoContentException();
-    }
-
-    await this.userService.updateUserById(user.id, { isLoggedIn: false });
+    return await this.whitelistTokensService.deleteWhiteListToken({ token });
   }
 }

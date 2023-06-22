@@ -10,6 +10,13 @@ import { UserLoginsService } from './user-logins/user-logins.service';
 import { UsersService } from './users/users.service';
 import { UserLogins, UserLoginsSchema } from './user-logins/user-logins.schema';
 import { User, UserSchema } from './users/users.schema';
+import { WhitelistTokensService } from './whitelist-tokens/whitelist-tokens.service';
+import { WhitelistTokensController } from './whitelist-tokens/whitelist-tokens.controller';
+import { WhitelistTokensModule } from './whitelist-tokens/whitelist-tokens.module';
+import {
+  WhitelistTokens,
+  WhitelistTokensSchema,
+} from './whitelist-tokens/whitelist-tokens-schema';
 
 @Module({
   imports: [
@@ -24,11 +31,22 @@ import { User, UserSchema } from './users/users.schema';
       { name: UserLogins.name, schema: UserLoginsSchema },
     ]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: WhitelistTokens.name, schema: WhitelistTokensSchema },
+    ]),
     UsersModule,
     UserLoginsModule,
     AuthModule,
+    WhitelistTokensModule,
   ],
-  providers: [AuthService, JwtService, UserLoginsService, UsersService],
+  providers: [
+    AuthService,
+    JwtService,
+    UserLoginsService,
+    UsersService,
+    WhitelistTokensService,
+  ],
   exports: [UserLoginsService, UsersService],
+  controllers: [WhitelistTokensController],
 })
 export class AppModule {}

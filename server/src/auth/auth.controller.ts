@@ -24,7 +24,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard())
   @Post('/signout')
-  async signOut(@Req() req: any): Promise<void> {
+  async signOut(@Req() req: Request): Promise<void> {
     return await this.authService.logOut(req);
   }
 }

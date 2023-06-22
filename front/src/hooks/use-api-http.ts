@@ -41,7 +41,7 @@ export const useApiHttp = (): {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body,
+          body: body ? body : {},
         },
         applyData,
       });
