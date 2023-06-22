@@ -1,12 +1,14 @@
 import { useInput } from 'hooks/use-input';
 import './auth-form.scss';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useApiHttp } from '../../hooks/use-api-http';
 import { AxiosResponse } from 'axios';
 import { setTokenCookie } from 'auth/cookie.service';
+import { MyContext } from 'components/root/root';
 
 export default function AuthForm() {
+  const { data, setData } = useContext(MyContext);
   const [formMessage, setFormMessage] = useState('');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -67,6 +69,7 @@ export default function AuthForm() {
   const onApplyData = async (data: AxiosResponse<any, any>) => {
     const response = await data;
     if (response.status === 201) {
+      setData(response.data);
       resetAllValues();
       if (!isSigninMode) {
         setFormMessage(

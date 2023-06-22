@@ -4,7 +4,7 @@ import { useApiHttp } from 'hooks/use-api-http';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-export const Header = () => {
+export const Header = ({ data }: { data: any }) => {
   const [activeLink, setActiveLink] = useState('');
   const navigate = useNavigate();
   const { sendRequest } = useApiHttp();
@@ -42,6 +42,9 @@ export const Header = () => {
   return (
     <div>
       <ul className='horizontal-list'>
+        <li className='header-user-name'>
+          {data?.username && hasToken ? `Welcome ${data?.username}` : null}
+        </li>
         <li className={`header-link ${activeLink === '/' ? 'selected' : ''}`}>
           <a href='/' onClick={(e) => handleOnclick(e, '/')}>
             Home

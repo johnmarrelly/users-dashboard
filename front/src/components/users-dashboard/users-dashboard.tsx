@@ -1,6 +1,7 @@
 import { Popup } from 'components/popup/popup';
 import { UserCard } from 'components/user-card/user-card';
 import { useApiHttp } from 'hooks/use-api-http';
+import { useNavigateDeleteCookie } from 'hooks/use-navigate-delete-cookie';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ export default function UsersDashboard() {
   const { error, isLoading, sendRequest } = useApiHttp();
   const [usersData, setUsersData] = useState([]);
   const [popupUserData, setPopupUserData] = useState([]);
+  const { execute } = useNavigateDeleteCookie();
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
@@ -43,7 +45,7 @@ export default function UsersDashboard() {
     fetchData();
 
     if (error?.response?.status === 401) {
-      navigate('/auth?mode=signin');
+      execute('/auth?mode=signin', 'token');
     }
 
     const interval = setInterval(
@@ -58,8 +60,14 @@ export default function UsersDashboard() {
 
   return (
     <div className='wrapper'>
-      {usersData?.map((userData) => {
-        return <UserCard onData={handleOnData} userData={userData} />;
+      {usersData?.map((userData: any) => {
+        return (
+          <UserCard
+            key={userData.id}
+            onData={handleOnData}
+            userData={userData}
+          />
+        );
       })}
       {isPopupOpen && (
         <Popup onClose={handleClosePopup} header='User Details'>

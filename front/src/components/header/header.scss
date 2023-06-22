@@ -2,6 +2,12 @@
   display: flex;
   justify-content: space-around;
 
+  .header-user-name {
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+  }
+
   .header-link {
     list-style-type: none;
 

@@ -11,6 +11,7 @@ import { Request } from 'express';
 import { UserLoginsService } from 'src/user-logins/user-logins.service';
 import { AuthCredentialsLoginDto } from './dto/auth-cradential-login.dto';
 import { WhitelistTokensService } from 'src/whitelist-tokens/whitelist-tokens.service';
+import { WhitelistTokens } from 'src/whitelist-tokens/whitelist-tokens-schema';
 
 @Injectable()
 export class AuthService {
@@ -60,7 +61,12 @@ export class AuthService {
   async logIn(
     authCredentials: AuthCredentialsLoginDto,
     req: Request,
-  ): Promise<{ userId: string; accessToken: string; refreshToken: string }> {
+  ): Promise<{
+    userId: string;
+    accessToken: string;
+    refreshToken: string;
+    username: string;
+  }> {
     const { email, password } = authCredentials;
     const user: User = await this.userService.getUserByUserName(email);
 
@@ -97,12 +103,19 @@ export class AuthService {
       userId: user.id,
     });
 
-    return { userId: id, accessToken, refreshToken };
+    return { userId: id, username: user.email, accessToken, refreshToken };
   }
 
   async logOut(req: Request): Promise<void> {
     const [type, token] = req?.headers?.authorization.split(' ');
 
-    return await this.whitelistTokensService.deleteWhiteListToken({ token });
+    const whitelistToken: WhitelistTokens =
+      await this.whitelistTokensService.getWhiteListTokenByToken(token);
+
+    await this.whitelistTokensService.deleteWhiteListToken(token);
+
+    await this.userService.updateUserById(whitelistToken.userId, {
+      isLoggedIn: false,
+    });
   }
 }

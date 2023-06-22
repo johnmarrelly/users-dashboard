@@ -12,7 +12,7 @@ import { UserLogins } from './user-logins.schema';
 import { CreateUserLoginDto } from './dto/create-user-logins.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-// @UseGuards(AuthGuard())
+@UseGuards(AuthGuard())
 @Controller('user-logins')
 export class UserLoginsController {
   constructor(private userLoginsService: UserLoginsService) {}

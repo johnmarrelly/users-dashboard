@@ -1,15 +1,6 @@
 import { useApiHttp } from 'hooks/use-api-http';
 import './user-card.scss';
 
-interface IUserDetails {
-  userId?: string;
-  username?: string;
-  loginTime?: string;
-  lastUpdate?: string;
-  lastLogin?: string;
-  userIp?: string;
-}
-
 export const UserCard = ({
   onData,
   userData,

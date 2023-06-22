@@ -16,7 +16,7 @@ export class WhitelistTokensController {
   constructor(private whitelistTokensService: WhitelistTokensService) {}
 
   @Post()
-  async createToken(
+  async createWhitelistToken(
     @Body() whitelistTokenCreate: WhitelistTokenCreate,
   ): Promise<void> {
     return await this.whitelistTokensService.createWhiteListToken(
@@ -25,11 +25,9 @@ export class WhitelistTokensController {
   }
 
   @Delete()
-  async removeWhitelisToken(
+  async removeWhitelistToken(
     @Param() { token }: { token: string },
   ): Promise<void> {
-    return await this.whitelistTokensService.deleteWhiteListToken({
-      token,
-    });
+    return await this.whitelistTokensService.deleteWhiteListToken(token);
   }
 }

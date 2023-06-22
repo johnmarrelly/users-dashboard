@@ -21,7 +21,11 @@ export class WhitelistTokensService {
     await this.whitelistModelModel.create(whitelistTokenCreateDto);
   }
 
-  async deleteWhiteListToken({ token }: { token: string }): Promise<void> {
+  async deleteWhiteListToken(token: string): Promise<void> {
     await this.whitelistModelModel.deleteOne({ token });
+  }
+
+  async getWhiteListTokenByToken(token: string): Promise<WhitelistTokens> {
+    return await this.whitelistModelModel.findOne({ token });
   }
 }

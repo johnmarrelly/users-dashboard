@@ -4,7 +4,7 @@ import { IUserLogins } from '../user-logins.interface';
 export class CreateUserLoginDto {
   @IsString()
   @IsNotEmpty()
-  userIp: IUserLogins['userIp'];
+  userIp?: IUserLogins['userIp'];
 
   @IsString()
   @IsNotEmpty()

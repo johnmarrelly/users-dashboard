@@ -1,11 +1,19 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import './root.scss';
-import { useEffect } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { deleteCookie, getCookie } from 'auth/cookie.service';
 import { Header } from 'components/header/header';
+import { useNavigateDeleteCookie } from 'hooks/use-navigate-delete-cookie';
+
+export const MyContext = createContext({
+  data: {},
+  setData: (data: any) => data,
+});
 
 export default function Root() {
+  const [data, setData] = useState({ username: '' });
   const navigate = useNavigate();
+  const { execute } = useNavigateDeleteCookie();
 
   useEffect(() => {
     const tokenExpirationTime = parseInt(
@@ -16,27 +24,29 @@ export default function Root() {
     }
 
     const timeoutId = setTimeout(() => {
+      console.log('entered here');
       if (getCookie('token')) {
-        console.log('inside settimeout');
-        deleteCookie('token');
-        navigate('/auth?mode=signin');
+        execute('/auth?mode=signin', 'token');
       }
     }, tokenExpirationTime);
 
     return () => {
+      deleteCookie('token');
       clearTimeout(timeoutId);
     };
-  }, [process.env.TOKEN_EXPIRATION_TIME, navigate]);
+  }, [navigate, execute]);
 
   return (
-    <div className='root-container'>
-      <div className='header'>
-        <Header></Header>
+    <MyContext.Provider value={{ data, setData }}>
+      <div className='root-container'>
+        <div className='header'>
+          <Header data={data}></Header>
+        </div>
+        <div className='main'>
+          <Outlet />
+        </div>
+        <div className='footer'></div>
       </div>
-      <div className='main'>
-        <Outlet />
-      </div>
-      <div className='footer'></div>
-    </div>
+    </MyContext.Provider>
   );
 }
