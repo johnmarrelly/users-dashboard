@@ -31,7 +31,7 @@ export const useHttp = (): {
 
         applyData(response);
       } catch (err: any) {
-        setError(err.message as any);
+        setError(err as any);
       }
 
       setIsLoading(false);

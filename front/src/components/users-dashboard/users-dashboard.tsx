@@ -2,8 +2,10 @@ import { Popup } from 'components/popup/popup';
 import { UserCard } from 'components/user-card/user-card';
 import { useApiHttp } from 'hooks/use-api-http';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function UsersDashboard() {
+  const navigate = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { error, isLoading, sendRequest } = useApiHttp();
   const [usersData, setUsersData] = useState([]);
@@ -40,6 +42,10 @@ export default function UsersDashboard() {
 
     fetchData();
 
+    if (error?.response?.status === 401) {
+      navigate('/auth?mode=signin');
+    }
+
     const interval = setInterval(
       fetchData,
       parseInt(process.env.REACT_APP_REFRESH_TIME || '')
@@ -48,7 +54,7 @@ export default function UsersDashboard() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [error, sendRequest]);
 
   return (
     <div className='wrapper'>
